@@ -16,61 +16,6 @@ def load_mnist_test_images(num_images=1000):
     
     return x_test_flat, y_test
 
-def generate_c_file(images, labels, output_file='test_images_1000.c'):
-    """Generate C file with MNIST images in the required format"""
-    num_images = len(images)
-    pixels_per_image = images.shape[1]
-    
-    print(f"Generating C file with {num_images} images...")
-    
-    with open(output_file, 'w') as f:
-        # Write header
-        f.write("// Auto-generated test images for CNN\n\n")
-        f.write("#include <stdint.h>\n\n")
-        f.write(f"#define NUM_TEST_IMAGES {num_images}\n")
-        f.write(f"#define PIXELS_PER_IMAGE {pixels_per_image}\n\n")
-        
-        # Write labels array
-        f.write(f"const uint8_t test_labels[NUM_TEST_IMAGES] = {{\n    ")
-        for i, label in enumerate(labels):
-            f.write(f"{label}")
-            if i < len(labels) - 1:
-                f.write(", ")
-            if (i + 1) % 16 == 0 and i < len(labels) - 1:
-                f.write("\n    ")
-        f.write("};\n\n")
-        
-        # Write images arrayy
-        f.write(f"const int32_t test_images_fixed[NUM_TEST_IMAGES][PIXELS_PER_IMAGE] = {{\n")
-        
-        for img_idx, image in enumerate(images):
-            f.write(f"    {{// Image {img_idx}\n")
-            
-            # Write pixels in groups of 8 per line
-            for pixel_idx in range(0, pixels_per_image, 8):
-                f.write("     ")
-                for j in range(8):
-                    if pixel_idx + j < pixels_per_image:
-                        pixel_value = (image[pixel_idx + j]/255.0) * (2**31 - 1)
-                        pixel_value = int(pixel_value)
-                        f.write(f"0x{pixel_value:08X}")  
-                        if pixel_idx + j < pixels_per_image - 1:
-                            f.write(", ")
-                if pixel_idx + 8 < pixels_per_image:
-                    f.write("\n")
-            
-            if img_idx < num_images - 1:
-                f.write("},\n")
-            else:
-                f.write("}\n")
-        
-        f.write("};\n")
-    
-    print(f"Successfully generated {output_file}")
-    print(f"Total images: {num_images}")
-    print(f"Pixels per image: {pixels_per_image}")
-    print(f"File size: {len(open(output_file, 'r').read()) / (1024*1024):.2f} MB")
-
 
 def save_normalized_test_images(num_images: int = 1000,
                                 x_path: str = 'X.txt',
