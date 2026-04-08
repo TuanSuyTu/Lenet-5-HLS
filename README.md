@@ -1,4 +1,4 @@
-# LeNet-5 Hardware Accelerator (Vivado HLS)
+# LeNet-5 Hardware Accelerator (VitisHLS)
 
 > This project was built to explore High-Level Synthesis (HLS) as a bridge between high-level Machine Learning frameworks (Python/TensorFlow) and low-level Hardware deployment. It demonstrates a deep understanding of CNN architecture mapping to C++ and the application of Silicon-Mindset hardware directives to maximize DSP usage and throughput via Pipelining.
 
